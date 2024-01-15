@@ -47,8 +47,7 @@ outdatedOsAction="${9:-"/System/Library/CoreServices/Software Update.app"}"     
 webhookURL="${10:-""}"                                                          # Parameter 10: Microsoft Teams or Slack Webhook URL [ Leave blank to disable (default) | https://microsoftTeams.webhook.com/URL | https://hooks.slack.com/services/URL ] Can be used to send a success or failure message to Microsoft Teams or Slack via Webhook. (Function will automatically detect if Webhook URL is for Slack or Teams; can be modified to include other communication tools that support functionality.)
 presetConfiguration="${11:-""}"                                                 # Parameter 11: Specify a Configuration (i.e., `policyJSON`; NOTE: If set, `promptForConfiguration` will be automatically suppressed and the preselected configuration will be used instead)
 swiftDialogMinimumRequiredVersion="2.3.2.4726"                                  # This will be set and updated as dependancies on newer features change.
-
-
+configurationDownloadEstimation="true"                                          # Do we make an estimate of the download time
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Various Feature Variables
@@ -140,7 +139,7 @@ exitCode="0"
 # Configuration Variables
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-configurationDownloadEstimation="true"      # [ true (default) | false ]
+# ** Moveed to globals configurationDownloadEstimation="true"      # [ true (default) | false ]
 correctionCoefficient="1.01"                # "Fudge factor" (to help estimate match reality)
 
 configurationCatchAllSize="34"              # Catch-all Configuration in Gibibits (i.e., Total File Size in Gigabytes * 7.451)
@@ -3150,7 +3149,7 @@ outputLineNumberInVerboseDebugMode
 
 if [[ "${symConfiguration}" == *"Catch-all"* ]] || [[ -z "${symConfiguration}" ]] || [[ "${welcomeDialog}" != "userInput" ]]; then
 
-    if [[ "${configurationDownloadEstimation}" == "true" ]]; then
+    if [[ ${configurationDownloadEstimation} == "true" ]]; then
 
         outputLineNumberInVerboseDebugMode
 
@@ -3159,9 +3158,8 @@ if [[ "${symConfiguration}" == *"Catch-all"* ]] || [[ -z "${symConfiguration}" ]
         updateScriptLog "SETUP YOUR MAC DIALOG: **Connection:**  \n- Download:  \n$mbps Mbps  \n\n**Estimate:**  \n- $(printf '%dh:%dm:%ds\n' $((configurationCatchAllEstimatedSeconds/3600)) $((configurationCatchAllEstimatedSeconds%3600/60)) $((configurationCatchAllEstimatedSeconds%60)))"
 
         infoboxConfiguration="**Connection:**  \n- Download:  \n$mbps Mbps  \n\n**Estimate:**  \n- $(printf '%dh:%dm:%ds\n' $((configurationCatchAllEstimatedSeconds/3600)) $((configurationCatchAllEstimatedSeconds%3600/60)) $((configurationCatchAllEstimatedSeconds%60)))"
-
     else
-
+    
         # When `welcomeDialog` is set to `false` or `video`, set the value of `infoboxConfiguration` to null (thanks for the idea, @Manikandan!)
         infoboxConfiguration=""
 
